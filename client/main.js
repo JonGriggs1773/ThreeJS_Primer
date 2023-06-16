@@ -17,21 +17,24 @@ camera.position.setZ(30)
 
 //? Building my shapes/objects
 const geometry = new THREE.TorusGeometry(10, 3, 16, 100)
-const material = new THREE.MeshStandardMaterial( { color: 0x00ff00} )
+const material = new THREE.MeshToonMaterial({color: 0xA4F353})
 const torus = new THREE.Mesh( geometry, material )
-scene.add( torus )
+const jonTexture = new THREE.TextureLoader().load('me.png')
+const jon = new THREE.Mesh(
+    new THREE.BoxGeometry(5,5,5),
+    new THREE.MeshBasicMaterial({map: jonTexture})
+)
+scene.add( torus, jon )
 
 //? Light Sources
-const pointLight = new THREE.PointLight(0xffffff)
-pointLight.position.set(5, 5, 5)
-
-const ambientLight = new THREE.AmbientLight(0xffffff)
-scene.add(pointLight, ambientLight)
+const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+directionalLight.position.set(5, 5, 5)
+scene.add(directionalLight)
 
 //* Helps show position of the pointlight source
-const lightHelper = new THREE.PointLightHelper(pointLight)
-const gridHelper = new THREE.GridHelper(200, 50)
-scene.add(lightHelper, gridHelper)
+const lightHelper = new THREE.PointLightHelper(directionalLight)
+const axesHelper = new THREE.AxesHelper( 5 );
+scene.add(lightHelper, axesHelper)
 
 const controls = new OrbitControls(camera, renderer.domElement)
 
@@ -45,7 +48,9 @@ function addStar() {
     scene.add(star)
 }
 
-Array(500).fill().forEach(addStar)
+Array(200).fill().forEach(addStar)
+const portalTexture = new THREE.TextureLoader().load('galaxy.png')
+scene.background = portalTexture
 
 function animate() {
 	requestAnimationFrame( animate )
